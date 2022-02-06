@@ -9,6 +9,8 @@ import PartidaController from './app/controllers/PartidaController'
 import ObjetivoController from './app/controllers/ObjetivoController'
 import RoundController from './app/controllers/RoundController'
 import ResultadoController from './app/controllers/ResultadoController'
+import LocalController from './app/controllers/LocalController'
+import MapaController from './app/controllers/MapaController'
 const router = Router();
 router.post('/auth', AuthController.authenticate);
 router.post('/jogador/store', JogadorController.store);
@@ -34,4 +36,8 @@ router.post('/resultado/store', ResultadoController.store);
 router.post('/resultado/list', ResultadoController.list);
 router.post('/endereco/delete', EnderecoController.delete);
 router.post('/endereco/find', EnderecoController.find);
+router.post('/mapa/store', MapaController.store);
+router.post('/mapa/list', MapaController.list);
+router.post('/local/store', LocalController.store);
+router.post('/local/list', LocalController.list);
 export default router;
