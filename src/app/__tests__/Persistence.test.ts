@@ -12,23 +12,23 @@ describe("persistence test", () => {
     beforeAll(async () => {
         await setup()
     });
-    it('teste /endereco/list e /endereco/delete', async () => {
+    it('teste /local/list e /local/delete', async () => {
 
         var agent = supertest(app);
-        const postList = await agent.post('/endereco/list');
-        expect(postList.statusCode).toEqual(200);
-        if (postList.body.length > 0) {
+        const localList = await agent.get('/local/list');
+        expect(localList.statusCode).toEqual(200);
+        if (localList.body.length > 0) {
 
-            for (const e of postList.body) {
+            for (const e of localList.body) {
                 console.log(e);
                 const data = { "id": e.id };
-                const postDelete = await agent.post('/endereco/delete').send(data);
-                expect(postDelete.statusCode).toEqual(204);
+                const localDelete = await agent.post('/local/delete').send(data);
+                expect(localDelete.statusCode).toEqual(204);
             }
 
         } else {
-            const data = { "cep": "Endereco", "complemento": "402" };
-            const postCreate = await agent.post('/endereco/store').send(data);
+            const data = { "name": "nome", "latitude": "1", "longitude": "2", "mapaId": null, "objetivoId": null };
+            const postCreate = await agent.post('/local/store').send(data);
             expect(postCreate.statusCode).toEqual(200);
         }
 
@@ -46,13 +46,13 @@ cadastrados.`);
                 //console.log(p);
                 const data = { "nickname": p.nickname };
                 console.log(`Removendo o jogador ${data.nickname}.`);
-                const postDeleteJogador = await agent.post('/jogador/delete').send(data);
-                expect(postDeleteJogador.statusCode).toEqual(204);
+                const localDeleteJogador = await agent.post('/jogador/delete').send(data);
+                expect(localDeleteJogador.statusCode).toEqual(204);
                 //esse remocao pode gerar alguma violacao de chave, caso o endereco esteja sendo referenciado por outro jogador.
                 //ou aplicar a estratégia de cascade no ManytoOne
                 console.log(`Removendo o endereco ${p.endereco.id}.`);
-                const postDeleteEndereco = await agent.post('/endereco/delete').send({ "id": p.endereco.id });
-                expect(postDeleteEndereco.statusCode).toEqual(204);
+                const localDeleteEndereco = await agent.post('/endereco/delete').send({ "id": p.endereco.id });
+                expect(localDeleteEndereco.statusCode).toEqual(204);
             }
 
         } else {
