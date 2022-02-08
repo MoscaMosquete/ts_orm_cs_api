@@ -16,7 +16,7 @@ class MapaController {
         return res.json(j);
     }
     async delete(req: Request, res: Response) {
-        try {
+       /* try {
             const repository = getRepository(Mapa);
             const { id } = req.body;
 
@@ -36,5 +36,9 @@ class MapaController {
             console.log(e);
             return res.sendStatus(500);
         }
+        */
+        const {mapaId} = req.params
+        const response = await Mapa.delete(parseInt(mapaId))
+        return res.json(response)
     }
 } export default new MapaController();

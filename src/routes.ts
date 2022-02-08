@@ -41,9 +41,11 @@ router.post('/endereco/delete', EnderecoController.delete);
 router.post('/endereco/find', EnderecoController.find);
 router.post('/mapa/store', MapaController.store);
 router.get('/mapa/list', MapaController.list);
+router.delete('/mapa/delete/:mapaId', MapaController.delete)
 router.post('/local/store', LocalController.store);
 router.get('/local/list', LocalController.list);
 router.delete('/local/delete/:localId', LocalController.delete);
-router.put('/mapa/:mapaId/local/:localId', LocalMapaJoinController.linklocal)
+router.post('/mapa/:mapaId/local/:localId', LocalMapaJoinController.linklocal)
+router.get('/mapa/:mapaId/locals', LocalMapaJoinController.list)
 
 export default router;
