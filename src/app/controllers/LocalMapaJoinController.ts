@@ -39,7 +39,7 @@ class LocalMapaJoin {
             .from(Mapa, 'tb_mapa')
             .leftJoinAndSelect('tb_mapa.locals', 'locals')
             .where('tb_mapa.id = :mapa_id', { mapa_id: mapaId })
-            .getMany()
+            .getOne()
 
             console.log(localMapLink)
             return res.json(localMapLink)

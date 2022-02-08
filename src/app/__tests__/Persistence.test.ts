@@ -17,11 +17,15 @@ describe("persistence test", () => {
         var agent = supertest(app);
         const localList = await agent.get('/local/list');
         let mapaList = await agent.get('/mapa/list')
-        for (const p of mapaList.body){
-            console.log(p.id)
-            const thing = await agent.get(`/mapa/4/locals`)
-            console.log(thing.body)
-            p.locals = thing.body.locals
+        for (let p of mapaList.body){
+            p.locals = []
+            var thing = await agent.get(`/mapa/${p.id}/locals`)
+
+            for (const lc of thing.body.locals){
+                console.log(`lc: ${lc.id}`)
+                p.locals.push(lc.id)
+            }           
+            //p.locals = thing.body.locals
         }
         console.log('Mapas:\n', mapaList.body)
         console.log('Locais:\n', localList.body)
