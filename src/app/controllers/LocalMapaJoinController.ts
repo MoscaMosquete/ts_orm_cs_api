@@ -41,6 +41,7 @@ class LocalMapaJoin {
             .where('tb_mapa.id = :mapa_id', { mapa_id: mapaId })
             .getMany()
 
+            console.log(localMapLink)
             return res.json(localMapLink)
     }
 }

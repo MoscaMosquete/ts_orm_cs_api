@@ -6,7 +6,7 @@ import Local from '../models/Local';
 class MapaController {
     async list(req: Request, res: Response) {
         const repository = getRepository(Mapa);
-        const lista = await repository.find();
+        let lista = await repository.find();
         return res.json(lista);
     }
     async store(req: Request, res: Response) {
