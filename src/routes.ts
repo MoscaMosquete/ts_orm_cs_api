@@ -11,7 +11,10 @@ import RoundController from './app/controllers/RoundController'
 import ResultadoController from './app/controllers/ResultadoController'
 import LocalController from './app/controllers/LocalController'
 import MapaController from './app/controllers/MapaController'
+import LocalMapaJoinController from './app/controllers/LocalMapaJoinController'
+
 const router = Router();
+
 router.post('/auth', AuthController.authenticate);
 router.post('/jogador/store', JogadorController.store);
 router.post('/jogador/update', JogadorController.update);
@@ -40,6 +43,7 @@ router.post('/mapa/store', MapaController.store);
 router.get('/mapa/list', MapaController.list);
 router.post('/local/store', LocalController.store);
 router.get('/local/list', LocalController.list);
-router.post('/local/delete', LocalController.delete);
+router.delete('/local/delete/:localId', LocalController.delete);
+router.put('/mapa/:mapaId/local/:localId', LocalMapaJoinController.linklocal)
 
 export default router;

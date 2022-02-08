@@ -1,12 +1,12 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn, ManyToMany, BaseEntity, JoinTable, PrimaryGeneratedColumn } from "typeorm";
 import Mapa from "./Mapa";
 import Objetivo from "./Objetivo";
 
 @Entity('tb_local')
-class Local{
+class Local extends BaseEntity{
     @PrimaryColumn('int')
     id: number;
-
+    
     @Column('text')
     name: string;
 
@@ -16,12 +16,12 @@ class Local{
     @Column("varchar")
     longitude: string;
 
-    @ManyToOne(() => Mapa, map => map.locals)
-    mapa: Mapa;
+    @ManyToMany(() => Mapa, map => map.locals)
+    mapas: Mapa[];
 
-    @ManyToOne(() => Objetivo, Objetivo => Objetivo.id)
+/*  @ManyToOne(() => Objetivo, Objetivo => Objetivo.id)
     Objetivo: Objetivo;
-/*
+
     @ManyToOne(type => Map)
     @JoinColumn({name: "map_id", referencedColumnName: "id"})
     map: Map;

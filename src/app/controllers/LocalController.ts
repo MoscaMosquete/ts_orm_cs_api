@@ -14,7 +14,7 @@ class LocalController {
         return res.json(j);
     }
     async delete(req: Request, res: Response) {
-        try {
+        /* try {
             const repository = getRepository(Local);
             const { id } = req.body;
 
@@ -33,6 +33,9 @@ class LocalController {
         } catch (e: unknown) {
             console.log(e);
             return res.sendStatus(500);
-        }
-    }
+        } */
+        const {localId} = req.params
+        const response = await Local.delete(parseInt(localId))
+        return res.json(response)
+    } 
 } export default new LocalController();

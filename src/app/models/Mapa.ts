@@ -1,8 +1,8 @@
-import { Entity, Column, PrimaryColumn, ManyToMany, JoinTable } from "typeorm";
+import { BaseEntity, Entity, Column, PrimaryColumn, ManyToMany, JoinTable } from "typeorm";
 import Local from "./Local";
 
 @Entity('tb_mapa')
-class Mapa {
+class Mapa extends BaseEntity {
     @PrimaryColumn('int')
     id: number;
 
@@ -12,7 +12,7 @@ class Mapa {
     //@OneToMany(() => Local, local => local.mapa)
     //locals: Local[];
 
-    @ManyToMany(() => Local)
+    @ManyToMany(() => Local, {cascade: true})
     @JoinTable({
         name: "tb_mapa_local", joinColumn: {
             name: "mapa_id", referencedColumnName: "id"

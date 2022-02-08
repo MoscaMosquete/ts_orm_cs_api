@@ -12,50 +12,42 @@ describe("persistence test", () => {
     beforeAll(async () => {
         await setup()
     });
-    it('teste /local/list e /local/delete', async () => {
+    it('teste /*/list', async () => {
 
         var agent = supertest(app);
         const localList = await agent.get('/local/list');
-        expect(localList.statusCode).toEqual(200);
-        if (localList.body.length > 0) {
-
-            for (const e of localList.body) {
-                console.log(e);
-                const data = { "id": e.id };
-                const localDelete = await agent.post('/local/delete').send(data);
-                expect(localDelete.statusCode).toEqual(204);
-            }
-
-        } else {
-            const data = { "name": "nome", "latitude": "1", "longitude": "2", "mapaId": null, "objetivoId": null };
-            const postCreate = await agent.post('/local/store').send(data);
-            expect(postCreate.statusCode).toEqual(200);
-        }
-
+        const mapaList = await agent.get('/mapa/list')
+        console.log('Mapas:\n', mapaList.body)
+        console.log('Locais:\n', localList.body)
     });
-    it('teste /jogador/list e /jogador/delete', async () => {
+    it('teste /*/delete e /*/store', async () => {
 
         var agent = supertest(app);
-        const ret = await agent.post('/jogador/list');
-        expect(ret.statusCode).toEqual(200);
-        if (ret.body.length > 0) {
-            console.log(`Encontrou ${ret.body.length} jogadores
-cadastrados.`);
+        const localDel = await agent.get('/local/list');
+        const mapaDel = await agent.get('/mapa/list')
+        console.log(`Encontrou ${localDel.body.length} locais cadastrados.`);
+        console.log(`Encontrou ${mapaDel.body.length} mapas cadastrados.`);
 
-            for (const p of ret.body) {
-                //console.log(p);
-                const data = { "nickname": p.nickname };
-                console.log(`Removendo o jogador ${data.nickname}.`);
-                const localDeleteJogador = await agent.post('/jogador/delete').send(data);
-                expect(localDeleteJogador.statusCode).toEqual(204);
-                //esse remocao pode gerar alguma violacao de chave, caso o endereco esteja sendo referenciado por outro jogador.
-                //ou aplicar a estratégia de cascade no ManytoOne
-                console.log(`Removendo o endereco ${p.endereco.id}.`);
-                const localDeleteEndereco = await agent.post('/endereco/delete').send({ "id": p.endereco.id });
-                expect(localDeleteEndereco.statusCode).toEqual(204);
+        if (localDel.body.length > 0) {
+            
+            for (const p of localDel.body) {
+                console.log(p);
+                const data = { "id": p.id };
+                console.log(`Removendo o local ${p.name}, id: ${data.id}.`);
+                await agent.post('/local/delete').send(data);
             }
 
-        } else {
+        } 
+        if (mapaDel.body.length > 0) {
+
+            for (const p of mapaDel.body) {
+                console.log(p);
+                const data = { "id": p.id };
+                console.log(`Removendo o mapa ${p.name}, id: ${data.id}.`);
+                await agent.post('/mapa/delete').send(data);
+            }
+
+        }/* else {
             console.log("Não encontrou jogadores cadastrados, cadastrando novo jogador e endereco.");
             const postCreateEndereco = await agent.post('/endereco/store').send({ "id": "0", "cep": "99010010" });
             expect(postCreateEndereco.statusCode).toEqual(200);
@@ -70,7 +62,7 @@ cadastrados.`);
             };
             const postCreateJogador = await agent.post('/jogador/store').send(data);
             expect(postCreateJogador.statusCode).toEqual(200);
-        }
+        } */
 
     });
 });
