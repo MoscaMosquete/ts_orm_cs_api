@@ -18,6 +18,8 @@ class Local extends BaseEntity{
 
     @ManyToMany(() => Mapa, map => map.locals)
     mapas: Mapa[];
+    @ManyToMany(() => Objetivo, objetivo => objetivo.locais)
+    objetivo: Objetivo[];
 
 /*  @ManyToOne(() => Objetivo, Objetivo => Objetivo.id)
     Objetivo: Objetivo;
