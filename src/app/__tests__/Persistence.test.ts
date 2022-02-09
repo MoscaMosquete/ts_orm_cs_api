@@ -12,11 +12,16 @@ describe("persistence test", () => {
     beforeAll(async () => {
         await setup()
     });
-    it('teste /*/list', async () => {
+    it('teste /*/list, além de link local-mapa', async () => {
 
         var agent = supertest(app);
         const localList = await agent.get('/local/list');
         let mapaList = await agent.get('/mapa/list')
+        if(mapaList.body.length > 0 && localList.body.length > 0){
+            console.log(`Conectando o local 1 ao mapa 1`)
+            await agent.post('/mapa/1/local/1')
+
+        }
         for (let p of mapaList.body){
             p.locals = []
             var thing = await agent.get(`/mapa/${p.id}/locals`)
@@ -44,9 +49,19 @@ describe("persistence test", () => {
                 console.log(p);
                 const data = { "id": p.id };
                 console.log(`Removendo o local ${p.name}, id: ${data.id}.`);
-                await agent.post('/local/delete').send(data);
-            }
+                await agent.delete(`/local/delete/${p.id}`)
+            } 
 
+        } else {
+            console.log("Não encontrou locais cadastrados, cadastrando novo local.");
+            const data = {
+                "id": "1",
+                "name": "local1",
+                "latitude": "100",
+                "longitude": "50"
+            };
+            const postCreateJogador = await agent.post('/local/store').send(data);
+            expect(postCreateJogador.statusCode).toEqual(200);
         } 
         if (mapaDel.body.length > 0) {
 
@@ -54,25 +69,19 @@ describe("persistence test", () => {
                 console.log(p);
                 const data = { "id": p.id };
                 console.log(`Removendo o mapa ${p.name}, id: ${data.id}.`);
-                await agent.post('/mapa/delete').send(data);
+                await agent.delete(`/mapa/delete/${p.id}`)
             }
 
-        }/* else {
-            console.log("Não encontrou jogadores cadastrados, cadastrando novo jogador e endereco.");
-            const postCreateEndereco = await agent.post('/endereco/store').send({ "id": "0", "cep": "99010010" });
-            expect(postCreateEndereco.statusCode).toEqual(200);
-            const postFindEndereco = await agent.post('/endereco/find').send({ "cep": "99010010" });
-            expect(postFindEndereco.statusCode).toEqual(200);
-            console.log(postFindEndereco.body);
+        } else {
+            console.log("Não encontrou mapas cadastrados, cadastrando novo mapa.");
             const data = {
-                "nickname": "t@g1.com",
-                "senha": "11111",
-                "pontos": 10,
-                "endereco": postFindEndereco.body
+                "id": "1",
+                "name": "mapa1",
             };
-            const postCreateJogador = await agent.post('/jogador/store').send(data);
+            const postCreateJogador = await agent.post('/mapa/store').send(data);
             expect(postCreateJogador.statusCode).toEqual(200);
-        } */
+        } 
+        
 
     });
 });
